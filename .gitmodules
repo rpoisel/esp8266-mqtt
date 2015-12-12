@@ -1,0 +1,6 @@
+[submodule "external/esp_mqtt"]
+	path = external/esp_mqtt
+	url = https://github.com/tuanpmt/esp_mqtt.git
+[submodule "external/esp8266-cmake"]
+	path = external/esp8266-cmake
+	url = https://github.com/rpoisel/esp8266-cmake.git
