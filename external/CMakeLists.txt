@@ -1,6 +1,31 @@
 add_subdirectory(esp8266-cmake/sdk)
 add_subdirectory(esp8266-cmake/main)
 
+### GPIO16
+
+set(GPIO16_SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/esp8266-gpio16)
+
+add_library(GPIO16_LIB INTERFACE)
+set_property(TARGET GPIO16_LIB
+    PROPERTY INTERFACE_INCLUDE_DIRECTORIES
+    ${GPIO16_SOURCE_DIR}/include
+)
+
+file(GLOB GPIO16_SRC
+    ${GPIO16_SOURCE_DIR}/driver/gpio16.c
+)
+
+add_library(gpio16 STATIC
+    ${GPIO16_SRC}
+)
+
+target_include_directories(gpio16 PRIVATE
+    $<TARGET_PROPERTY:USER_LIB,INTERFACE_INCLUDE_DIRECTORIES>
+    $<TARGET_PROPERTY:GPIO16_LIB,INTERFACE_INCLUDE_DIRECTORIES>
+    $<TARGET_PROPERTY:ESP8266_SDK,INTERFACE_INCLUDE_DIRECTORIES>
+)
+
+### esp_mqtt
 set(MQTT_SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/esp_mqtt)
 
 add_library(MQTT_LIB INTERFACE)

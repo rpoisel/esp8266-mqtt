@@ -29,12 +29,12 @@
  */
 #include "ets_sys.h"
 #include "driver/uart.h"
+#include "driver/gpio16.h"
 #include "osapi.h"
 #include "mqtt.h"
 #include "wifi.h"
 #include "config.h"
 #include "debug.h"
-#include "gpio.h"
 #include "user_interface.h"
 #include "mem.h"
 
@@ -49,6 +49,7 @@ static ETSTimer counterIncrementTimer;
 #define MQTT_TOPIC_COUNT_0 "/mqtt/count/0"
 #define LED_ON "on"
 #define LED_OFF "off"
+#define LED_GPIO_PIN 7 /* GPIO13 */
 #define INTERVAL_PUBLISH 1000 /* milliseconds */
 #define INTERVAL_INCREMENT_COUNT 500 /* milliseconds */
 
@@ -114,12 +115,12 @@ void mqttDataCb(uint32_t *args, const char* topic, uint32_t topic_len, const cha
   {
     if (os_strcmp(dataBuf, LED_ON) == 0)
     {
-      gpio_output_set(BIT13, 0, BIT13, 0);
+      gpio_write(LED_GPIO_PIN, 1);
       INFO("LED on\r\n");
     }
     else if (os_strcmp(dataBuf, LED_OFF) == 0)
     {
-      gpio_output_set(0, BIT13, BIT13, 0);
+      gpio_write(LED_GPIO_PIN, 0);
       INFO("LED off\r\n");
     }
     else
@@ -167,8 +168,8 @@ void user_init(void)
 
   CFG_Load();
 
-  PIN_FUNC_SELECT(PERIPHS_IO_MUX_MTCK_U, FUNC_GPIO13);
-  gpio_output_set(0, BIT13, BIT13, 0);
+  set_gpio_mode(LED_GPIO_PIN, GPIO_OUTPUT, GPIO_FLOAT);
+  gpio_write(LED_GPIO_PIN, 0);
 
   MQTT_InitConnection(&mqttClient, sysCfg.mqtt_host, sysCfg.mqtt_port, sysCfg.security);
 
