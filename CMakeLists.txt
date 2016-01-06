@@ -10,5 +10,4 @@ set_property(TARGET USER_CODE
     user_lib
     gpio16
     mqtt
-    ssl
 )
