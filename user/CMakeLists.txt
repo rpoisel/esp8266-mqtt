@@ -1,21 +1,18 @@
-add_library(USER_LIB INTERFACE)
-set_property(TARGET USER_LIB
-    PROPERTY INTERFACE_INCLUDE_DIRECTORIES
-    ${CMAKE_CURRENT_LIST_DIR}
-    )
-
 file(GLOB USER_LIB_SRC
     ${CMAKE_CURRENT_LIST_DIR}/*.c
 )
 
-add_library(user_lib STATIC
+add_library(user_code STATIC
     ${USER_LIB_SRC}
 )
 
-target_include_directories(user_lib PRIVATE
-    $<TARGET_PROPERTY:USER_LIB,INTERFACE_INCLUDE_DIRECTORIES>
-    $<TARGET_PROPERTY:GPIO16_LIB,INTERFACE_INCLUDE_DIRECTORIES>
-    $<TARGET_PROPERTY:MQTT_LIB,INTERFACE_INCLUDE_DIRECTORIES>
-    $<TARGET_PROPERTY:ESP8266_SDK,INTERFACE_INCLUDE_DIRECTORIES>
+target_include_directories(user_code PUBLIC
+    ${CMAKE_CURRENT_LIST_DIR}
+)
+
+target_link_libraries(user_code
+    ESP8266_SDK
+    gpio16
+    mqtt
 )
 
